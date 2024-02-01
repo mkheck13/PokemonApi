@@ -12,6 +12,8 @@ let data;
 let getFavBtn = document.getElementById("getFavBtn");
 let getFavDiv = document.getElementById("getFavDiv");
 
+let shinyBtn = document.getElementById("shinyBtn");
+
 // Load on refresh and page load
 document.addEventListener('DOMContentLoaded', function() {
     pokemonApi(1);
@@ -21,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
 const pokemonApi = async (pokemon) => {
     pokeSearch.value = "";
     const promise = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
-    const data = await promise.json();
+    data = await promise.json();
 
 
 
@@ -118,16 +120,31 @@ pokeSearch.addEventListener('keydown', async (event) => {
     }
 });
 
-
-
 randBtn.addEventListener("click", async () => {
     let random = Math.floor(Math.random() * 649) + 1;
     pokemonApi(random);
   });
 
-//   pokeImg.addEventListener("click", () => {
-//     shiny ? ((shiny = false), (pokeImg.src = data.sprites.other["official-artwork"].front_shiny)) : ((shiny = true), (pokeImg.src = data.sprites.other["official-artwork"].front_default));
-//   });
+// Shiny Button
+
+shinyBtn.addEventListener('click', () => {
+    if (pokeImg.src == data.sprites.other['official-artwork'].front_default) {
+        shinyBtn.textContent = 'shiny form'
+        pokeImg.src = data.sprites.other['official-artwork'].front_shiny;
+        // console.log("shiny");
+    }
+    else {
+        shinyBtn.textContent = 'normal form'
+        pokeImg.src = data.sprites.other['official-artwork'].front_default;
+        // console.log("normal");
+    }
+})
+
+
+
+
+
+
 
 favBtn.addEventListener('click', ()=> {
     saveToLocalStorage(pokemon[0].name);
