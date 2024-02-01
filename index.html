@@ -20,7 +20,7 @@
         </div>
         <div class="col-span-3">
             <form>
-                <input id="pokeSearch" class= "h-10 w-max pl-5" type="search" placeholder="Pokemon name">
+                <input id="pokeSearch" class= "h-10 w-max pl-5" type="text" placeholder="Pokemon name">
                 <button id="searchBtn" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Search</button>
             </form> 
         </div>
@@ -31,6 +31,7 @@
             <img id="pokeEvo" src="" alt="pokemon Evolution">
         </div>
         <div class="bg-white col-span-3 row-span-2 rounded-xl pl-5">
+            <p id="pokeNum" class="font-semibold text-xl">poke number</p>
             <p id="pokeInfo" class="font-semibold text-xl">poke info</p>
             <p id="pokeType">Pokemon type</p>
             <p id="pokeLocal">Pokemon location</p>
@@ -43,7 +44,12 @@
             <p id="pokeMoves" class="max-h-96 overflow-scroll">poke moves</p>
         </div>
         <div class="bg-white col-span-3 row-span-3 rounded-xl pl-5">
-            <p id="pokeStats">poke stats</p>
+            <p id="pokeHp">poke hp</p>
+            <p id="pokeAtk">poke atk</p>
+            <p id="pokeDef">poke def</p>
+            <p id="pokeSpAtk">poke spatk</p>
+            <p id="pokeSpDef">spdef</p>
+            <p id="pokeSpd">spd</p>
         </div>
     </div>
 
@@ -58,7 +64,7 @@
  
  <!-- drawer component -->
  <div id="drawer-example" class="fixed top-0 left-0 z-40 h-screen p-4 overflow-y-auto transition-transform -translate-x-full bg-white w-80 dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label">
-    <h5 id="drawer-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400">Favorite's</h5>
+    <h5 id="drawer-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400">Favorite Pokemon</h5>
     <button type="button" data-drawer-hide="drawer-example" aria-controls="drawer-example" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white" >
        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
