@@ -8,6 +8,7 @@ let pokeSearch = document.getElementById("pokeSearch");
 let searchBtn = document.getElementById("searchBtn");
 let pokeImg = document.getElementById("pokeImg");
 let pokeEvo = document.getElementById("pokeEvo");
+let evolutions = document.getElementById("evolutions");
 let data;
 let getFavBtn = document.getElementById("getFavBtn");
 let getFavDiv = document.getElementById("getFavDiv");
@@ -21,6 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // API Call
 const pokemonApi = async (pokemon) => {
+
+    pokeEvo.innerHTML= "";
+
     pokeSearch.value = "";
     const promise = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
     data = await promise.json();
@@ -41,67 +45,95 @@ const pokemonApi = async (pokemon) => {
     pokeSpAtk.textContent = `SP. ATK- ${data.stats[3].base_stat}`;
     pokeSpDef.textContent = `SP. DEF- ${data.stats[4].base_stat}`;
     pokeSpd.textContent = `SPD- ${data.stats[5].base_stat}`;
+
+
+
+     // Name / Number
+     pokeInfo.innerText = data.name;
+
+     pokeNum.innerText = data.id.toString().padStart(3, '0');
     
-
-
-    // Evolution
-
-    // const evoGet = await fetch(`${data.species.url}`);
-    // const evoData = await evoGet.json();
-
-    // const evoChain = await fetch(`${evoData.evolution_chain.url}`);
-    // const evoChainData = await evoChain.json();
-
-    // if(evoChainData.chain.evoles_to.length === 0){
-    //     pokeEvo.textContent = "N/A";
-    // }else{
-    //     const evoArr = [evoChainData.chain.species.name];
-
-    //     const seeEvos = chain => {
-    //         if (chain.evoles_to.length === 0){
-    //             return;
-    //         }else{
-    //             chain.evoles_to.forEach(evo => {
-    //                 evoArr.push(evo.species.name);
-    //                 seeEvos(evo);
-    //             });
-    //         }
-    //     };
-    //     seeEvos(evoChainData.chain);
-    //     pokeEvo.textContent = evoArr.join(" > ");
-    // }
-
-
-
-    // Name / Number
-    pokeInfo.innerText = data.name;
-
-    pokeNum.innerText = data.id.toString().padStart(3, '0');
-
-    // Type
-    const typeArray = data.types.map(type => type.type.name);
-    pokeType.innerText = "Type: " + typeArray.join(", ");
-
-    // Location
-    const locationPromise = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}/encounters`);
-    const location = await locationPromise.json();
+     // Type
+     const typeArray = data.types.map(type => type.type.name);
+      pokeType.innerText = "Type: " + typeArray.join(", ");
+    
+     // Location
+     const locationPromise = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}/encounters`);
+     const location = await locationPromise.json();
         if(location.length > 0){
+
             let randomLocation = Math.floor(Math.random() * location.length);
             pokeLocal.textContent = `Location: ${(location[randomLocation].location_area.name).replaceAll("-", " ")}`;
         }else{
             pokeLocal.textContent = "Location: N/A";
         }
-
+    
     // Abilities
     const abilityArray = data.abilities.map(ability => ability.ability.name);
     pokeAbility.innerText = "Abilities: " + abilityArray.join(", ");
 
-    // Bio
+
+    // Evolution
+
+    const evoGet = await fetch(`${data.species.url}`);
+    const evoData = await evoGet.json();
+    
+
+    const evoChain = await fetch(`${evoData.evolution_chain.url}`);
+    const evoChainData = await evoChain.json();
+    
+
+    if (evoChainData.chain.evoles_to.length === 0) {
+        pokeEvo.textContent = "N/A";
+    }else{
+        const evoArr = [evoChainData.chain.species.name];
+
+        const seeEvos = (chain) => {
+             if(chain.evoles_to.length === 0)return;
+                chain.evoles_to.forEach(evo => {
+                    evoArr.push(evo.species.name);
+                    seeEvos(evo);
+                });
+        };
+        seeEvos(evoChainData.chain);
+        console.log(evoArr);
+        for(let i = 0; i <evoArr.length; i++){
+            evoCall(evoArr[i]);
+            console.log(evoArr[i]);
+        }
+
+        if(evoArr.length > 4){
+            evolutions.classList.toggle("lg:h-[450px]");
+            evolutions.classList.toggle("lg:h-80");
+            evolutions.classList.toggle("md:h-[1750px]");
+            evolutions.classList.toggle("md:h-[750px]");
+        }else if(evoArr.length <= 4 && evolutions.classList.contains("lg:h-[450px]")){
+            evolutions.classList.remove("lg:h-[450px]");
+            evolutions.classList.toggle("lg:h-80");
+            evolutions.classList.remove("md:h-[1750px]");
+            evolutions.classList.toggle("md:h-[750px]");
+        }
+        
+    }
+
+    async function evoCall(name){
+        const evoProm = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+        const evoData = await evoProm.json();
+
+        evoImg.src = evoData.sprites.other["showdown"].front_default;
+            evoImg.className = "mx-auto w-28 h-28 pb-3";
+            evoDiv.className = "mt-10";
+            evoDiv.appendChild(evoImg);
+            evoDiv.appendChild(evoName);
+            evoName.textContent = evoData.name.toUpperCase();
+            evolutionChart.appendChild(evoDiv);
+    }
 
 
 
 
 
+   
 }
 
 // Search button and random button
@@ -112,13 +144,13 @@ searchBtn.addEventListener('click', async () => {
     }
 });
 
-pokeSearch.addEventListener('keydown', async (event) => {
-    if (pokeSearch.value) {
-        if (event.key === 'Enter') {
-            currentPokemon = await pokemonApi(event.target.value.toLowerCase());
-        }
-    }
-});
+// pokeSearch.addEventListener('keydown', async (event) => {
+//     if (pokeSearch.value) {
+//         if (event.key === 'Enter') {
+//             currentPokemon = await pokemonApi(event.target.value.toLowerCase());
+//         }
+//     }
+// });
 
 randBtn.addEventListener("click", async () => {
     let random = Math.floor(Math.random() * 649) + 1;
