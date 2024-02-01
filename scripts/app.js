@@ -1,3 +1,5 @@
+import { saveToLocalStorage, getlocalStorage, removeFromLocalStorage } from "./localstorage.js";
+
 // ID's
 
 let randBtn =document.getElementById("randBtn");
@@ -7,6 +9,8 @@ let searchBtn = document.getElementById("searchBtn");
 let pokeImg = document.getElementById("pokeImg");
 let pokeEvo = document.getElementById("pokeEvo");
 let data;
+let getFavBtn = document.getElementById("getFavBtn");
+let getFavDiv = document.getElementById("getFavDiv");
 
 // Load on refresh and page load
 document.addEventListener('DOMContentLoaded', function() {
@@ -124,6 +128,65 @@ randBtn.addEventListener("click", async () => {
 //   pokeImg.addEventListener("click", () => {
 //     shiny ? ((shiny = false), (pokeImg.src = data.sprites.other["official-artwork"].front_shiny)) : ((shiny = true), (pokeImg.src = data.sprites.other["official-artwork"].front_default));
 //   });
+
+favBtn.addEventListener('click', ()=> {
+    saveToLocalStorage(pokemon[0].name);
+
+})
+
+getFavBtn.addEventListener('click', ()=>{
+    // this retrives our data from local storage and stores it into favorites variable.
+    let favorites = getlocalStorage();
+
+    // clears div so the array dsplay will not repeat
+    getFavDiv.textContent = "";
+
+    // map though each element in our array
+    favorites.map(pokeName => {
+
+        // we're creating a p tag dynamically
+        let p = document.createElement('p');
+
+        //setting its text content to digiName
+        p.textContent = pokeName;
+        // classname replaces all classes with our new classes
+        p.className = "text-lg font-medium text-gray-900 dark:text-white"
+
+        // creating a button dynamically
+        let button = document.createElement('button');
+
+        button.type = "button"
+        button.textContent = "X";
+        // classlist allows us to be a little more concise it doesnt replace the classes
+        button.classList.add(        
+        "text-gray-400",
+        "bg-transparent",
+        "hover:bg-gray-200",
+        "hover:text-gray-900",
+        "rounded-lg",
+        "text-sm",
+        "w-8",
+        "h-8",
+        "justify-end",
+        "dark:hover:bg-gray-600",
+        "dark:hover:text-white"
+        );
+
+        // creating an eventlistener for our button which removes diginame from our favorites
+        button.addEventListener('click', ()=> {
+            removeFromLocalStorage(pokeName);
+            p.remove();
+        })
+
+        // appending our button to our p-tag
+        p.append(button);
+
+        // appending our p-tag to our favoritesdiv
+        getFavDiv.append(p);
+    })
+
+
+})
 
 
 
